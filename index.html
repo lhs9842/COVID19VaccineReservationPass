@@ -2,6 +2,8 @@
 <head>
 	<meta charset="utf-8" />
 	<title>코로나19 예방접종 사전예약 페이지 접속</title>
+	<script type="text/javascript" src="https://ncvr.kdca.go.kr/js/front/netfunnel.js?ver=21080316" charset="UTF-8"></script>
+    <script type="text/javascript" src="https://ncvr.kdca.go.kr/js/front/netfunel_skin.js?ver=21080316" charset="UTF-8"></script>
 	<script>
 		function refreshKey(key){
 			var netfunnel = new XMLHttpRequest();
@@ -9,16 +11,16 @@
 				if(netfunnel.readyState === netfunnel.DONE){
 					if(netfunnel.status === 200 || netfunnel.status === 201){
 						var respon = netfunnel.responseText;
+						var codeIndex = respon.indexOf(":") + 1;
+						var code = respon.substr(codeIndex, 3);
+						if(code != "200" && code != "201"){startWait(); return 0;}
 						var nwaitIndex = respon.indexOf("nwait=") + 6;
-						if(nwaitIndex == -1) {
-							alert("세션 유효시간 경과!! 키를 지우고 다시 대기열 시작을 해주세요.");
-						}
 						var keyIndex = respon.indexOf("key=") + 4;
 						var nextIndex = respon.indexOf("&nnext");
 						document.getElementById("nwait").value = respon.substr(nwaitIndex, nextIndex - nwaitIndex);
 						var key = respon.substr(keyIndex, nwaitIndex - 6 - keyIndex - 1);
 						document.getElementById("key").value=key;
-						setTimeout(()=>refreshKey(key), 2000);
+						setTimeout(()=>refreshKey(document.getElementById("key").value), 500);
 					}
 					else if(netfunnel.status === 0){
 						alert("CORS 오류 발생!! 확장기능 설치 및 활성화 여부를 확인하고, 확장기능의 Reload active tab을 눌러 본 페이지를 다시 로드해주세요.");
@@ -34,31 +36,12 @@
 			netfunnel.send();
 		}
 		function startWait(){
-			if(document.getElementById("key").value != ""){
-				refreshKey(document.getElementById("key").value);
-				return 0;
-			}
-			var netfunnel = new XMLHttpRequest();
-			netfunnel.onreadystatechange = function(){
-				if(netfunnel.readyState === netfunnel.DONE){
-					if(netfunnel.status === 200 || netfunnel.status === 201){
-						var respon = netfunnel.responseText;
-						var nwaitIndex = respon.indexOf("nwait=") + 6;
-						if(nwaitIndex == -1) {
-							alert("세션 유효시간 경과!!");
-						}
-						var keyIndex = respon.indexOf("key=") + 4;
-						var nextIndex = respon.indexOf("&nnext");
-						document.getElementById("nwait").value = respon.substr(nwaitIndex, nextIndex - nwaitIndex);
-						var key = respon.substr(keyIndex, nwaitIndex - 6 - keyIndex - 1);
-						document.getElementById("key").value=key;
-						setTimeout(()=>refreshKey(key), 2000);
-					}
-				}
-			}
-			netfunnel.open("GET", "https://kdca.netfunnel.co.kr/ts.wseq?opcode=5101&nfid=0&prefix=NetFunnel.gRtype=5101;&sid=service_1&aid=index&js=yes&1628074957242");
-			netfunnel.setRequestHeader("Origin", "https://ncvr.kdca.go.kr/home_n.html");
-			netfunnel.send();
+			NetFunnel_Action({action_id:'index', skin_id:"default"},{
+              success:function(ev,ret){
+				  document.getElementById("key").value=ret.data.key;
+				  refreshKey(ret.data.key);
+              }
+          });
 		};
 	</script>
 	<!-- Global site tag (gtag.js) - Google Analytics -->
