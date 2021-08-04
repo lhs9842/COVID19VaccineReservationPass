@@ -47,7 +47,8 @@
 							alert("세션 유효시간 경과!!");
 						}
 						var keyIndex = respon.indexOf("key=") + 4;
-						document.getElementById("nwait").value = respon.substr(nwaitIndex, 1);
+						var nextIndex = respon.indexOf("&nnext");
+						document.getElementById("nwait").value = respon.substr(nwaitIndex, nextIndex - nwaitIndex);
 						var key = respon.substr(keyIndex, nwaitIndex - 6 - keyIndex - 1);
 						document.getElementById("key").value=key;
 						setTimeout(()=>refreshKey(key), 2000);
