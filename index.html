@@ -31,17 +31,38 @@
 				}
 			}
 			var keyUrl = "https://kdca.netfunnel.co.kr/ts.wseq?opcode=5002&key=" + key;
-			keyUrl = keyUrl + "&nfid=0&prefix=NetFunnel.gRtype=5002;&ttl=3&sid=service_1&aid=index&js=yes&1628075021565";
+			keyUrl = keyUrl + "&nfid=0&prefix=NetFunnel.gRtype=5002;&ttl=3&sid=service_1&aid=procCI01&js=yes&1628075021565";
 			netfunnel.open("GET", keyUrl);
 			netfunnel.send();
 		}
 		function startWait(){
-			NetFunnel_Action({action_id:'index', skin_id:"default"},{
-              success:function(ev,ret){
-				  document.getElementById("key").value=ret.data.key;
-				  refreshKey(ret.data.key);
-              }
-          });
+			var netfunnel = new XMLHttpRequest();
+			netfunnel.onreadystatechange = function(){
+				if(netfunnel.readyState === netfunnel.DONE){
+					if(netfunnel.status === 200 || netfunnel.status === 201){
+						var respon = netfunnel.responseText;
+						var codeIndex = respon.indexOf(":") + 1;
+						var code = respon.substr(codeIndex, 3);
+						if(code != "200" && code != "201"){startWait(); return 0;}
+						var nwaitIndex = respon.indexOf("nwait=") + 6;
+						var keyIndex = respon.indexOf("key=") + 4;
+						var nextIndex = respon.indexOf("&nnext");
+						document.getElementById("nwait").value = respon.substr(nwaitIndex, nextIndex - nwaitIndex);
+						var key = respon.substr(keyIndex, nwaitIndex - 6 - keyIndex - 1);
+						document.getElementById("key").value=key;
+						setTimeout(()=>refreshKey(document.getElementById("key").value), 500);
+					}
+					else if(netfunnel.status === 0){
+						alert("CORS 오류 발생!! 확장기능 설치 및 활성화 여부를 확인하고, 확장기능의 Reload active tab을 눌러 본 페이지를 다시 로드해주세요.");
+					}
+					else{
+						alert("확인되지 않은 오류 방생!! 인터넷 연결 상태를 확인하세요.")
+					}
+				}
+			}
+			var keyUrl = "https://kdca.netfunnel.co.kr/ts.wseq?opcode=5101&nfid=0&prefix=NetFunnel.gRtype=5101;&sid=service_1&aid=procCI01&js=yes&1628429769589"
+			netfunnel.open("GET", keyUrl);
+			netfunnel.send();
 		};
 	</script>
 	<!-- Global site tag (gtag.js) - Google Analytics -->
@@ -54,18 +75,17 @@
 	</script>
 </head>
 <body>
-	<h1>예약페이지 접속하기</h1>
+	<h1>예약페이지 접속 용 NetFunnel Key 가져오기</h1>
 	<h3 style="color:rgb(255,0,0);">대기열 시작을 <b><u>예약 시작 시간(20시) 전에 미리 누르셔야</u></b> 합니다!!!</h3>
 	<h3 style="color:rgb(255,0,0);">사용 전 <a href="https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf?hl=ko">여기</a>에 접속 후 확장 기능을 설치하고, 확장기능을 활성화하셔야 이용이 가능합니다.</h3>
 	<button id="start" onclick="startWait();">대기열 시작하기</button>
 	<h4 style="color:rgb(255,0,0);">아래 <b><u>nwait 값이 0이 아닐 때 접속 하기 누르시면 안됩니다</u></b>!!</h4>
 	<h5>정상적으로 작동한다면 아래 <u>Netfunnel Key 값이 2초 주기로 변경</u>됩니다. 값이 나타나지 않거나 변화가 멈춘 경우 인터넷 연결 상태 확인 후 대기열 시작버튼울 다시 누르세요.</h5>
 	<h5><u style="color:rgb(255,0,0);">백신 예약이 완료되면 설치한 CORS 확장 기능을 비활성화하고 제거할 것을 강력히 권고합니다.</u> 외부 서버 페이지에서 질병관리청 넷퓨넬 서버의 내용물을 가져오기 위해 이용을 요청하였습니다만, <u style="color:rgb(255,0,0);">이는 브라우저가 제공하는 <a href="https://developer.mozilla.org/ko/docs/Web/HTTP/CORS" target="_blank">보안 기능 중 일부</a>를 무력화합니다.</u></h5>
-	<h5>접속 이후 예약 진행 과정에서 "예기치 못한 에러가 발생하였습니다." 메시지가 나타나는 경우 alert 경고가 발생한 상황 중 하나이므로 예약 페이지에서의 입력 정보의 오류나 누락사항을 확인하시기 바랍니다. 이 방법으로 접속 시 alerm 내용을 정상적으로 표시할 수 없습니다.</h5>
+	<h5>이 페이지는 접속을 위한 파이썬 코드에서 사용되기 위해 개발되었습니다. 해당 코드는 <a href="/Covid19VaccineRegister.py">여기</a></h5>
 	nwait : <input type="text" id="nwait" value="" disabled>
-	<form method="post" action="https://relay.kdca.go.kr/cobk/rsrv/web/nfChek.do" target="_blank">
-		Netfunnel Key : <input type="text" id="key" name="netfunnel_key" value="" size=250>
-		<br><input type="submit" value="접속 하기">
+	<form method="post" action="https://ncvr2.kdca.go.kr/svc/complete" target="_blank">
+		Netfunnel Key : <input type="text" id="key" name="nfKey" value="" size=250>
 	</form>
 	<p>이 웹 문서에 대한 상세한 설명은 <a href="/README.html">여기</a>를 눌러 확인하실 수 있습니다.</p>
 </body>
