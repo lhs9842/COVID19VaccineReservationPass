@@ -13,21 +13,17 @@
 						var respon = netfunnel.responseText;
 						var codeIndex = respon.indexOf(":") + 1;
 						var code = respon.substr(codeIndex, 3);
-						if(code != "200" && code != "201"){
-							document.getElementById("code").value=code;
-							var keyIndex = respon.indexOf("key=") + 4;
-							var nextIndex = respon.indexOf("&nnext");
-							var key = respon.substr(keyIndex, nwaitIndex - 6 - keyIndex - 1);
-							document.getElementById("key").value=key;
-							startWait();
-							return 0;
-						}
+						document.getElementById("code").value=code;
 						var nwaitIndex = respon.indexOf("nwait=") + 6;
 						var keyIndex = respon.indexOf("key=") + 4;
 						var nextIndex = respon.indexOf("&nnext");
 						document.getElementById("nwait").value = respon.substr(nwaitIndex, nextIndex - nwaitIndex);
 						var key = respon.substr(keyIndex, nwaitIndex - 6 - keyIndex - 1);
 						document.getElementById("key").value=key;
+						if(code != "200" && code != "201"){
+							startWait();
+							return 0;
+						}
 						setTimeout(()=>refreshKey(document.getElementById("key").value), 500);
 					}
 					else if(netfunnel.status === 0){
@@ -51,21 +47,17 @@
 						var respon = netfunnel.responseText;
 						var codeIndex = respon.indexOf(":") + 1;
 						var code = respon.substr(codeIndex, 3);
-						if(code != "200" && code != "201"){
-							document.getElementById("code").value=code;
-							var keyIndex = respon.indexOf("key=") + 4;
-							var nextIndex = respon.indexOf("&nnext");
-							var key = respon.substr(keyIndex, nwaitIndex - 6 - keyIndex - 1);
-							document.getElementById("key").value=key;
-							startWait();
-							return 0;
-						}
+						document.getElementById("code").value=code;
 						var nwaitIndex = respon.indexOf("nwait=") + 6;
 						var keyIndex = respon.indexOf("key=") + 4;
 						var nextIndex = respon.indexOf("&nnext");
 						document.getElementById("nwait").value = respon.substr(nwaitIndex, nextIndex - nwaitIndex);
 						var key = respon.substr(keyIndex, nwaitIndex - 6 - keyIndex - 1);
 						document.getElementById("key").value=key;
+						if(code != "200" && code != "201"){
+							startWait();
+							return 0;
+						}
 						setTimeout(()=>refreshKey(document.getElementById("key").value), 500);
 					}
 					else if(netfunnel.status === 0){
