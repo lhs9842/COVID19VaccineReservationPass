@@ -45,6 +45,7 @@
 						var code = respon.substr(codeIndex, 3);
 						if(code != "200" && code != "201"){
 							document.getElementById("code").value=code;
+							document.getElementById("key").value=key;
 							startWait();
 							return 0;
 						}
