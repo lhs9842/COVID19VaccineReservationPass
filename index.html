@@ -13,7 +13,7 @@
 						var respon = netfunnel.responseText;
 						var codeIndex = respon.indexOf(":") + 1;
 						var code = respon.substr(codeIndex, 3);
-						if(code != "200" && code != "201"){startWait(); return 0;}
+						if(code != "200" && code != "201" && code != "301"){startWait(); return 0;}
 						var nwaitIndex = respon.indexOf("nwait=") + 6;
 						var keyIndex = respon.indexOf("key=") + 4;
 						var nextIndex = respon.indexOf("&nnext");
@@ -43,7 +43,7 @@
 						var respon = netfunnel.responseText;
 						var codeIndex = respon.indexOf(":") + 1;
 						var code = respon.substr(codeIndex, 3);
-						if(code != "200" && code != "201"){startWait(); return 0;}
+						if(code != "200" && code != "201" && code != "301"){startWait(); return 0;}
 						var nwaitIndex = respon.indexOf("nwait=") + 6;
 						var keyIndex = respon.indexOf("key=") + 4;
 						var nextIndex = respon.indexOf("&nnext");
