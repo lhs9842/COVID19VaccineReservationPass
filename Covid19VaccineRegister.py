@@ -52,10 +52,11 @@ while True:
     print("실패 내용" + se['rsltMsg'])
 reqId = se['reqId']
 print("본인인증이 완료되었습니다.")
+print("접속 후 페이지 오류 또는 실수로 탭을 닫은 경우 https://ncvr2.kdca.go.kr/svc/waiting?reqId=" + reqId + "로 접속하시기 바랍니다.\n본 주소로 접속 시 10분 동안 재인증 대기를 하실 필요가 없습니다.")
 print("별도로 안내해드린 방법으로 준비해둔 NetFunnel Key가 필요합니다.")
 print("NetFunnel Key 없이 본인인증 후 예약 시스템 접속 대기를 브라우저에서 시작하려면 p만 입력하고 엔터키를 누르세요")
 nfKey = input("NetFunnel Key : ")
-if nfKey.upper() == "P":
+if nfKey.upper() == "P" or nfKey == "":
     webbrowser.open("https://ncvr2.kdca.go.kr/svc/waiting?reqId=" + reqId)
 else:
     webbrowser.open("https://ncvr2.kdca.go.kr/svc/complete?reqId=" + reqId + "&nfKey=" + nfKey)
